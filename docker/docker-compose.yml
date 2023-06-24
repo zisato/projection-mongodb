@@ -1,0 +1,58 @@
+version: "3.7"
+services:
+  php-cli:
+    build:
+      context: ./php-8.1
+      target: php-cli
+    environment:
+      - MONGO_URL=mongodb://root:root@mongodb:27017
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+    links:
+      - mongodb
+    ports:
+      - 8080:8080
+    volumes:
+      - ../:/var/www:delegated
+    working_dir: /var/www/
+
+  php-cli-pcov:
+    build:
+      context: ./php-8.1
+      target: php-cli-pcov
+    environment:
+      - MONGO_URL=mongodb://root:root@mongodb:27017
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+    links:
+      - mongodb
+    volumes:
+      - ../:/var/www:delegated
+    working_dir: /var/www/
+  
+  php-cli-xdebug:
+    build:
+      context: ./php-8.1
+      target: php-cli-xdebug
+    environment:
+      - MONGO_URL=mongodb://root:root@mongodb:27017
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - XDEBUG_MODE=debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal client_port=9003
+    links:
+      - mongodb
+    volumes:
+      - ../:/var/www:delegated
+    working_dir: /var/www/
+
+  mongodb:
+    build:
+      context: ./php-8.1
+      target: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+    restart: always
