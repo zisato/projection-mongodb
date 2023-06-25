@@ -43,7 +43,7 @@ abstract class MongoDBRepository extends MongoDBBaseRepository implements Projec
 
     public function get(string $id): ProjectionModel
     {
-        /** @var array<mixed, mixed> $data */
+        /** @var array<mixed, mixed>|null $data */
         $data = $this->collection()
             ->findOne(
                 [
@@ -57,7 +57,7 @@ abstract class MongoDBRepository extends MongoDBBaseRepository implements Projec
                 ]
             );
 
-        if ($data === []) {
+        if ($data === null) {
             throw new ProjectionModelNotFoundException(sprintf('Projection with id %s not found', $id));
         }
 
